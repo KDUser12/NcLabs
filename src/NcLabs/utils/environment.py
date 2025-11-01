@@ -29,11 +29,9 @@ def python_compatiblity() -> None:
     logger.debug(f"Python minimal version : {min_version_str}")
     logger.debug(f"Current version of Python : {python_version_str}")
     
-    logging.debug(f"Checking the required version : {min_version_str}")
-    
+    logger.debug(f"Checking the required version : {min_version_str}")
     if python_version < min_version:
         exit(logger.critical(f"The version of the Python environment where the program is running is lower than the minimum recommended version. ({python_version_str} < {min_version_str})"))
-        
 
     logger.info("The Python environment version is compatible.")
     

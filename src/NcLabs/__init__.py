@@ -10,4 +10,4 @@ __shortname__   = "NcLabs"
 __longname__    = "NcLabs: Personal Project Manager"
 __version__     = "v1.0-dev.1"
 
-forge_api_latest_release = "https://api.github.com/repos/kduser12/nclabs/releases/latest"
+forge_api_latest_release = "https://api.github.com/repos/yourlabxyz/pypixz/releases/latest"

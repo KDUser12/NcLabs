@@ -14,6 +14,7 @@ except ImportError as error:
     
 import yaml
 import argparse
+import os
 
 from __init__ import (
     __shortname__,
@@ -22,11 +23,11 @@ from __init__ import (
 )
 import utils._os
 import utils.environment
-import utils.package
+import utils.pypixz_lite
 
 checks = {"os": {"name": "OS", "function": lambda: utils._os.os_compatibility()},
           "env": {"name": "environment", "function": lambda: utils.environment.python_compatiblity()},
-          "packages": {"name": "packages", "function": lambda: utils.package.packages_install()}}
+          "packages": {"name": "packages", "function": lambda: utils.pypixz_lite.install_requirements(os.path.abspath("../requirements.txt"), True)}}
 
 
 def argparse_setup() -> argparse.Namespace:
@@ -42,7 +43,7 @@ def argparse_setup() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=f"{__longname__} ({__version__})")
     parser.add_argument("-v", "--version", action="version", version=f"{__shortname__} - {__version__}")
     parser.add_argument("-u", "--update", action="store_true", help="update the program to the latest version")
-    parser.add_argument("--skip-check", nargs="+", choices=["os", "env", "packages", "all"], help="pass the program launch checks")  # terminer de régler le problème avec all
+    parser.add_argument("--skip-check", nargs="+", choices=["os", "env", "packages", "all"], help="pass the program launch checks")
     parser.add_argument("--debug", action="store_true", help="enable debug output")
     args = parser.parse_args()
     
@@ -91,3 +92,8 @@ if __name__ == "__main__":
             data["function"]()
         else:
             logger.warning(f"Skipping {data["name"]} compatibility check.")
+            
+    if args.update:
+        import utils.update
+        utils.update.update_program()
+        exit()
