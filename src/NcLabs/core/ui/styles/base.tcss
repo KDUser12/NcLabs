@@ -1,17 +1,18 @@
-/* src/NcLabs/ui/style.tcss */
-
+/* Global screen styling */
 Screen {
+    background: $surface;
 }
 
 /* Centered welcome text */
 #welcome {
     width: 100%;
     height: 100%;
-    content-align: center middle; /* 👈 aligne horizontalement ET verticalement */
+    content-align: center middle;
     text-align: center;
+    color: white;
 }
 
-/* footer */
+/* Footer */
 #footer {
     background: #b8b8b8ff;
     color: #000000;
@@ -19,7 +20,7 @@ Screen {
     height: 1;
 }
 
-/* Bottom input bar like Neovim */
+/* Bottom input bar */
 #prompt-shell {
     dock: bottom;
     height: 1;
@@ -28,7 +29,7 @@ Screen {
     padding-left: 0;
 }
 
-/* focused input highlighting */
+/* Focus highlight */
 #prompt-shell:focus {
     background: transparent;
     color: #ffffff;

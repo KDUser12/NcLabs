@@ -1,49 +1,59 @@
 #! ./.venv/ python3
 
-from textual.app import App, ComposeResult
-from textual.containers import Container
-from textual.widgets import Static, Input, Label
+from textual.app import App
 import platform
 import sys
+from textual.screen import Screen
 
-import logging
-logger = logging.getLogger("main")
-
-from __init__ import __version__
+from .screens.main_screen import MainScreen
 
 
 class NcLabsApp(App):
-    """NcLabs Textual interface with Vim-style layout."""
-    CSS_PATH = "style.tcss"
+    """NcLabs Textual interface entry point."""
+    
+    CSS_PATH = "styles/base.tcss"
     
     BINDINGS = [
-        ("ctrl+c", "quit", "Quit NcLabs"),
+        ("q", "quit", "Quit"),
+        (":", "focus_prompt", "Focus prompt")
     ]
+    
     def __init__(self):
         super().__init__()
-        
-        self.__version__ = __version__
+        self.version = self._get_version()
         self.os = platform.system()
-        self.environment_version = '.'.join(map(str, sys.version_info[:3]))
+        self.environment_version = ".".join(map(str, sys.version_info[:3]))
         self.project_name = None
-    
-    def on_mount(self) -> None:
+        
+        
+    def _get_version(self) -> str:
+        """_get_version Retrieve the current NcLabs version.
+
+        This method attempts to import the `__version__` attribute from the
+        main NcLabs package. If the import fails (for example, when the
+        version file is missing or the package is not fully initialized),
+        it safely returns a fallback version of "0.0.0" instead of raising
+        an exception.
+
+        Returns:
+            str -- The current NcLabs version string (e.g., "1.2.0"), or "0.0.0" if unavailable.
+        """
+        
+        try:
+            from __init__ import __version__
+            return __version__
+        except Exception:
+            return "0.0.0"
+        
+        
+    def on_mount(self):
+        """Mount the main screen."""
         self.theme = "flexoki"
-
-    def compose(self) -> ComposeResult:
-        yield Container(
-            Static(
-                f"""\
-NcLabs - {self.__version__} [Python {self.environment_version}] on {self.os}
-For more information enter "help", "license" or "credit".
-
-type    :help[dim]<enter>[/dim]    list of available commands
-type    :q[dim]<enter>[/dim]       to exit                   
-
-type    :changelogs[dim]<enter>[/dim] to see changes in {self.__version__}
-""",
-                id="welcome",
-            )
-        )
-        yield Label(f"{"\[Project Name]" if not self.project_name else ""}", id="footer")
-        yield Input(placeholder=":", id="prompt-shell")
+        self.push_screen(MainScreen(self))
+        
+    
+    def action_focus_prompt(self):
+        screen: Screen = self.screen
+        prompt = screen.query_one("#prompt-shell")
+        prompt.focus()
+        
