@@ -97,3 +97,6 @@ if __name__ == "__main__":
         import utils.update
         utils.update.update_program()
         exit()
+
+    from core import NcLabs
+    NcLabs(args)
